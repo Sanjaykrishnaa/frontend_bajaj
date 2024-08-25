@@ -3,7 +3,8 @@ import axios from 'axios';
 
 const App = () => {
   const [input, setInput] = useState('');
-  const [response, setResponse] = useState(null);
+  const [response, setResponse] = useState(null);   
+
   const [selectedOptions, setSelectedOptions] = useState([]);
 
   const handleInputChange = (event) => {
@@ -42,7 +43,7 @@ const App = () => {
     };
 
     return (
-      <div>
+      <div className="filtered-response">
         {selectedOptions.map(option => (
           <div key={option}>
             <h3>{option}</h3>
@@ -56,7 +57,7 @@ const App = () => {
   return (
     <div className="App">
       <h1>Bajaj Frontend</h1>
-      <form onSubmit={handleSubmit}>
+      <div className="input-section">
         <label>
           Input JSON:
           <textarea
@@ -64,27 +65,3 @@ const App = () => {
             onChange={handleInputChange}
             rows="6"
             cols="30"
-            placeholder='{"data": ["A", "C", "z"]}'
-            required
-          />
-        </label>
-        <br />
-        <button type="submit">Submit</button>
-      </form>
-      <br />
-      <label>
-        Select options to display:
-        <select multiple={true} onChange={handleSelectChange}>
-          <option value="Numbers">Numbers</option>
-          <option value="Alphabets">Alphabets</option>
-          <option value="Highest lowercase alphabet">Highest lowercase alphabet</option>
-        </select>
-      </label>
-      <div>
-        {renderResponse()}
-      </div>
-    </div>
-  );
-};
-
-export default App;
