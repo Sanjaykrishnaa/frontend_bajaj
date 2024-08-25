@@ -1,14 +1,13 @@
 .App {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  padding: 20px;
 }
 
-.input-section {
-  flex: 1;
-  padding: 20px;
+.input-section, .multi-filter-section, .filtered-response {
   border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: #eee;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
 label {
@@ -31,20 +30,4 @@ button[type="submit"] {
   background-color: #007bff;
   color: #fff;
   cursor: pointer;
-}
-
-.multi-filter-section {
-  flex: 0.5;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: #eee;
-}
-
-.filtered-response {
-  flex: 1;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background-color: #eee;
 }
