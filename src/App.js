@@ -65,3 +65,26 @@ const App = () => {
             onChange={handleInputChange}
             rows="6"
             cols="30"
+        placeholder='{"data": ["A", "C", "z"]}'
+            required
+          />
+        </label>
+        <button type="submit">Submit</button>
+      </div>
+      <div className="multi-filter-section">
+        <label>
+          Select options to display:
+          <select multiple={true} onChange={handleSelectChange}>
+            <option value="Numbers">Numbers</option>
+            <option value="Alphabets">Alphabets</option>
+            <option value="Highest lowercase alphabet">Highest lowercase alphabet</option>
+          </select>
+        </label>
+      </div>
+      <div>
+        {renderResponse()}
+      </div>
+    </div>
+  );
+};
+
