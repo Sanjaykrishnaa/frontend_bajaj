@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './App.css';
+import './App.css'; // Import your CSS file for styling
+
 const App = () => {
   const [input, setInput] = useState('');
-  const [response, setResponse] = useState(null);   
-
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  const [response, setResponse] = useState(null);
+  const [selectedOption, setSelectedOption] = useState('Numbers');
 
   const handleInputChange = (event) => {
     setInput(event.target.value);
   };
 
   const handleSelectChange = (event) => {
-    const { options } = event.target;
-    const selected = Array.from(options)
-      .filter(option => option.selected)
-      .map(option => option.value);
-    setSelectedOptions(selected);
+    setSelectedOption(event.target.value);
   };
 
   const handleSubmit = async (event) => {
@@ -43,13 +39,11 @@ const App = () => {
     };
 
     return (
-      <div className="filtered-response">
-        {selectedOptions.map(option => (
-          <div key={option}>
-            <h3>{option}</h3>
-            <pre>{JSON.stringify(data[option], null, 2)}</pre>
-          </div>
-        ))}
+      <div>
+        <h3>Filtered Response</h3>
+        <p>
+          {selectedOption}: {data[selectedOption]?.join(', ') || 'No data available'}
+        </p>
       </div>
     );
   };
@@ -57,30 +51,29 @@ const App = () => {
   return (
     <div className="App">
       <h1>Bajaj Frontend</h1>
-      <div className="input-section">
+      <form onSubmit={handleSubmit}>
         <label>
-          Input JSON:
-          <textarea
+          API Input:
+          <input
+            type="text"
             value={input}
             onChange={handleInputChange}
-            rows="6"
-            cols="30"
             placeholder='{"data": ["A", "C", "z"]}'
             required
           />
         </label>
+        <br />
         <button type="submit">Submit</button>
-      </div>
-      <div className="multi-filter-section">
-        <label>
-          Select options to display:
-          <select multiple={true} onChange={handleSelectChange}>
-            <option value="Numbers">Numbers</option>
-            <option value="Alphabets">Alphabets</option>
-            <option value="Highest lowercase alphabet">Highest lowercase alphabet</option>
-          </select>
-        </label>
-      </div>
+      </form>
+      <br />
+      <label>
+        Multi Filter:
+        <select onChange={handleSelectChange}>
+          <option value="Numbers">Numbers</option>
+          <option value="Alphabets">Alphabets</option>
+          <option value="Highest lowercase alphabet">Highest lowercase alphabet</option>
+        </select>
+      </label>
       <div>
         {renderResponse()}
       </div>
