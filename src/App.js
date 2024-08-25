@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './App.css'; // Import your CSS file for styling
+import './App.css'; // Make sure this file exists and is correctly linked
 
 const App = () => {
   const [input, setInput] = useState('');
@@ -12,10 +12,7 @@ const App = () => {
   };
 
   const handleSelectChange = (event) => {
-    const { options } = event.target;
-    const selected = Array.from(options)
-      .filter(option => option.selected)
-      .map(option => option.value);
+    const selected = Array.from(event.target.selectedOptions, option => option.value);
     setSelectedOptions(selected);
   };
 
