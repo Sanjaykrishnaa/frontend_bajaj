@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './App.css'; // Make sure this file exists and is correctly linked
+import Select from 'react-select';
+import './App.css';
+
+const options = [
+  { value: 'Numbers', label: 'Numbers' },
+  { value: 'Alphabets', label: 'Alphabets' },
+  { value: 'Highest lowercase alphabet', label: 'Highest lowercase alphabet' },
+];
 
 const App = () => {
   const [input, setInput] = useState('');
@@ -11,9 +18,8 @@ const App = () => {
     setInput(event.target.value);
   };
 
-  const handleSelectChange = (event) => {
-    const selected = Array.from(event.target.selectedOptions, option => option.value);
-    setSelectedOptions(selected);
+  const handleSelectChange = (selected) => {
+    setSelectedOptions(selected ? selected.map(option => option.value) : []);
   };
 
   const handleSubmit = async (event) => {
@@ -71,11 +77,14 @@ const App = () => {
       <br />
       <label>
         Multi Filter:
-        <select multiple={true} onChange={handleSelectChange}>
-          <option value="Numbers">Numbers</option>
-          <option value="Alphabets">Alphabets</option>
-          <option value="Highest lowercase alphabet">Highest lowercase alphabet</option>
-        </select>
+        <Select
+          isMulti
+          options={options}
+          onChange={handleSelectChange}
+          className="basic-multi-select"
+          classNamePrefix="select"
+          placeholder="Select filters"
+        />
       </label>
       <div>
         {renderResponse()}
