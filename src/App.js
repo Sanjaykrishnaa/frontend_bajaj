@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-export default App;
+
 const App = () => {
   const [input, setInput] = useState('');
   const [response, setResponse] = useState(null);   
@@ -65,7 +65,7 @@ const App = () => {
             onChange={handleInputChange}
             rows="6"
             cols="30"
-        placeholder='{"data": ["A", "C", "z"]}'
+            placeholder='{"data": ["A", "C", "z"]}'
             required
           />
         </label>
@@ -88,3 +88,4 @@ const App = () => {
   );
 };
 
+export default App;
