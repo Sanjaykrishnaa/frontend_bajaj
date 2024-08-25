@@ -1,90 +1,88 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Select from 'react-select';
 
 const App = () => {
-  const [jsonInput, setJsonInput] = useState('');
+  const [input, setInput] = useState('');
   const [response, setResponse] = useState(null);
-  const [error, setError] = useState(null);
   const [selectedOptions, setSelectedOptions] = useState([]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    setResponse(null);
-
-    try {
-      // Validate JSON
-      const parsedData = JSON.parse(jsonInput);
-      if (!parsedData.data) {
-        throw new Error('Invalid JSON format');
-      }
-
-      // Make API request
-      const result = await axios.post('https://bajaj-finserve.onrender.com/bfhl', parsedData);
-      setResponse(result.data);
-    } catch (err) {
-      setError(err.message);
-    }
+  const handleInputChange = (event) => {
+    setInput(event.target.value);
   };
 
-  const handleSelectChange = (selected) => {
-    setSelectedOptions(selected || []);
+  const handleSelectChange = (event) => {
+    const { options } = event.target;
+    const selected = Array.from(options)
+      .filter(option => option.selected)
+      .map(option => option.value);
+    setSelectedOptions(selected);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const parsedInput = JSON.parse(input);
+      const res = await axios.post('https://bajaj-finserve.onrender.com/bfhl', parsedInput);
+      setResponse(res.data);
+    } catch (error) {
+      console.error('Error:', error);
+      setResponse({ error: 'Invalid input or network error' });
+    }
   };
 
   const renderResponse = () => {
     if (!response) return null;
 
-    const options = selectedOptions.map(option => option.value);
+    const { numbers, alphabets, highest_lowercase_alphabet } = response;
     const data = {
-      alphabets: response.alphabets,
-      numbers: response.numbers,
-      highest_lowercase_alphabet: response.highest_lowercase_alphabet,
+      Numbers: numbers,
+      Alphabets: alphabets,
+      'Highest lowercase alphabet': highest_lowercase_alphabet
     };
-
-    const filteredResponse = Object.keys(data)
-      .filter(key => options.includes(key))
-      .reduce((obj, key) => {
-        obj[key] = data[key];
-        return obj;
-      }, {});
 
     return (
       <div>
-        <h3>Response:</h3>
-        <pre>{JSON.stringify(filteredResponse, null, 2)}</pre>
+        {selectedOptions.map(option => (
+          <div key={option}>
+            <h3>{option}</h3>
+            <pre>{JSON.stringify(data[option], null, 2)}</pre>
+          </div>
+        ))}
       </div>
     );
   };
 
   return (
     <div className="App">
-      <h1>Roll Number: 21BRS1283</h1>
+      <h1>Bajaj Frontend</h1>
       <form onSubmit={handleSubmit}>
-        <textarea
-          value={jsonInput}
-          onChange={(e) => setJsonInput(e.target.value)}
-          rows="10"
-          cols="50"
-          placeholder='Enter JSON here...'
-        />
+        <label>
+          Input JSON:
+          <textarea
+            value={input}
+            onChange={handleInputChange}
+            rows="6"
+            cols="30"
+            placeholder='{"data": ["A", "C", "z"]}'
+            required
+          />
+        </label>
         <br />
         <button type="submit">Submit</button>
       </form>
-
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-
-      <Select
-        isMulti
-        options={[
-          { value: 'alphabets', label: 'Alphabets' },
-          { value: 'numbers', label: 'Numbers' },
-          { value: 'highest_lowercase_alphabet', label: 'Highest Lowercase Alphabet' }
-        ]}
-        onChange={handleSelectChange}
-      />
-
-      {renderResponse()}
+      <br />
+      <label>
+        Select options to display:
+        <select multiple={true} onChange={handleSelectChange}>
+          <option value="Numbers">Numbers</option>
+          <option value="Alphabets">Alphabets</option>
+          <option value="Highest lowercase alphabet">Highest lowercase alphabet</option>
+        </select>
+      </label>
+      <div>
+        {renderResponse()}
+      </div>
     </div>
   );
 };
