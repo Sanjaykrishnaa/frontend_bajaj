@@ -5,14 +5,18 @@ import './App.css'; // Import your CSS file for styling
 const App = () => {
   const [input, setInput] = useState('');
   const [response, setResponse] = useState(null);
-  const [selectedOption, setSelectedOption] = useState('Numbers');
+  const [selectedOptions, setSelectedOptions] = useState([]);
 
   const handleInputChange = (event) => {
     setInput(event.target.value);
   };
 
   const handleSelectChange = (event) => {
-    setSelectedOption(event.target.value);
+    const { options } = event.target;
+    const selected = Array.from(options)
+      .filter(option => option.selected)
+      .map(option => option.value);
+    setSelectedOptions(selected);
   };
 
   const handleSubmit = async (event) => {
@@ -35,15 +39,17 @@ const App = () => {
     const data = {
       Numbers: numbers,
       Alphabets: alphabets,
-      'Highest lowercase alphabet': highest_lowercase_alphabet
+      'Highest lowercase alphabet': highest_lowercase_alphabet,
     };
 
     return (
       <div>
         <h3>Filtered Response</h3>
-        <p>
-          {selectedOption}: {data[selectedOption]?.join(', ') || 'No data available'}
-        </p>
+        {selectedOptions.map((option, index) => (
+          <p key={index}>
+            {option}: {data[option]?.join(', ') || 'No data available'}
+          </p>
+        ))}
       </div>
     );
   };
@@ -68,7 +74,7 @@ const App = () => {
       <br />
       <label>
         Multi Filter:
-        <select onChange={handleSelectChange}>
+        <select multiple={true} onChange={handleSelectChange}>
           <option value="Numbers">Numbers</option>
           <option value="Alphabets">Alphabets</option>
           <option value="Highest lowercase alphabet">Highest lowercase alphabet</option>
